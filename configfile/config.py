@@ -1,6 +1,6 @@
 import os
 from pymongo import MongoClient
-from pymongo.errors import ConnectionFailure
+from pymongo.errors import ConnectionFailure, DuplicateKeyError
 from bson import ObjectId  # Import ObjectId to handle _id fields
 
 MONGO_URI = "mongodb://127.0.0.1:27017/"  # MongoDB URI
@@ -76,13 +76,23 @@ def setup_mongodb():
             "is_valid": False,
             "expected_error": "Wrong credentials",
             "createdAt": "2024-11-05T05:55:09.495Z"
+        },
+        {
+            "_id": ObjectId("67330291d2ea7592d81572ae"),  # Duplicate _id intentionally
+            "username": "duplicate_user",
+            "password": "duplicate_password",
+            "email": "duplicate@test.com"
         }
     ]
 
     # Insert sample data if not already present
-    if collection.count_documents({}) == 0:
-        collection.insert_many(sample_data)
+    try:
+        collection.insert_many(sample_data, ordered=False)
         print(f"Test data inserted into {db.name}.{collection.name}")
+    except DuplicateKeyError as e:
+        print(f"Duplicate Key Error encountered: {e}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
     else:
         print(f"Test data already exists in {db.name}.{collection.name}")
 
