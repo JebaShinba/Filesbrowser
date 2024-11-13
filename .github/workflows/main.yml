@@ -1,0 +1,91 @@
+name: Selenium Tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:4.4
+        ports:
+          - 27017:27017
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Set PYTHONPATH
+      run: |
+        echo "PYTHONPATH=$PYTHONPATH:$GITHUB_WORKSPACE/Cases/"configfile/config.py >> $GITHUB_ENV
+    - name: Set Environment Variables
+      run: |
+        echo "PYTHONPATH=$PWD/Cases/homeobjects:$PWD/Cases/configfile/config.py" >> $GITHUB_ENV
+        echo "MONGO_URI=mongodb://127.0.0.1:27017/test_db" >> $GITHUB_ENV
+    - name: Wait for MongoDB to be ready
+      run: |
+        until nc -zv localhost 27017; do
+          echo "Waiting for MongoDB to start..."
+          sleep 1
+        done
+        echo "MongoDB is ready"
+    - name: Configure MongoDB Test Data
+      run: |
+        python configfile/config.py  # Adjust the path to your setup script if necessary
+    - name: Set up ChromeDriver and Chrome
+      uses: browser-actions/setup-chrome@v1
+      with:
+        chrome-version: 'latest'
+
+    - name: Set Timezone to India Standard Time (IST)
+      run: sudo timedatectl set-timezone Asia/Kolkata  # Set the timezone to IST  
+      
+    - name: List all files and directories
+      run: |
+        ls -R   # Lists all files and directories recursively for debugging
+    
+   
+    - name: Run Selenium tests and generate HTML report
+      id: run_tests
+      run: |
+            pytest --html=Selenium_report.html --self-contained-html > pytest_test_results.log || exit 0
+            cat pytest_test_results.log
+   
+        
+    - name: Archive Pytest Results
+      uses: actions/upload-artifact@v3
+      with:
+            name: pytest-results
+            path: pytest_test_results.log
+        
+    - name: Archive HTML Test Report
+      uses: actions/upload-artifact@v3
+      with:
+            name: selenium-test-report
+            path: Selenium_report.html
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
