@@ -59,6 +59,29 @@ def setup_mongodb():
             "createdAt": "2024-11-05T06:14:52.021Z"
         },
         {
+            "_id": "67330291d2ea7592d81572ae",  # This should be an ObjectId, not a string
+            "username": "demo",
+            "first_name": "admin",
+            "last_name": "admin",
+            "password": "demo",
+            "mode_2fa": "Off",
+            "groups": ["Admin"],
+            "rights": "Admin",
+            "notes": {
+                "info": "this 'notes' field exists only for this default user",
+                "p": "donttrustyou"
+            },
+            "vec_2fa": None,
+            "baseurl": "https://demo.filebrowser.org/login?redirect=/files/",
+            "is_valid": False,
+            "expected_error": "Wrong credentials",
+            "createdAt": "2024-11-05T06:14:52.021Z"
+        },
+
+
+
+
+        {
             "_id": ObjectId("6729bf3c523f6133a28fc714"),
             "username": "Test",
             "first_name": "Test",

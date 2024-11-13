@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 # MongoDB setup functions
-def get_db():
+def get():
     """Set up MongoDB connection."""
     client = MongoClient("mongodb://localhost:27017/")  # Replace with your MongoDB URI
     return client["sampleupload"]
