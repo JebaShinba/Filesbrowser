@@ -1,5 +1,6 @@
 import pytest
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from homeobjects.test_login import LoginPage
 from configfile.config import MongoClient
 import logging
@@ -21,7 +22,14 @@ def get_users_collection():
 
 @pytest.fixture(scope="class")
 def setup_driver():
-    driver = webdriver.Chrome()
+    # Set up Chrome options for headless mode
+    options = Options()
+    options.add_argument("--headless")  # Run in headless mode
+    options.add_argument("--disable-gpu")  # Disable GPU acceleration (optional but recommended for headless)
+    options.add_argument("--no-sandbox")  # Disable the sandbox (necessary for some CI environments)
+
+    # Initialize the WebDriver with the headless options
+    driver = webdriver.Chrome(options=options)
     driver.implicitly_wait(5)
     yield driver
     driver.quit()
