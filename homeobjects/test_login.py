@@ -1,17 +1,19 @@
+import pytest
+from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException, TimeoutException
+from selenium.common.exceptions import TimeoutException
 
 
-class LoginPage():
+class LoginPage:
     def __init__(self, driver):
         self.driver = driver
+
     def setUsername(self, username):
         username_field = WebDriverWait(self.driver, 20).until(
             EC.visibility_of_element_located((By.XPATH, "//input[@placeholder='Username']"))
         )
-
         username_field.clear()
         username_field.send_keys(username)
 
@@ -27,7 +29,6 @@ class LoginPage():
         )
         login_button.click()
 
-
     def actualError(self):
         try:
             error_element = WebDriverWait(self.driver, 20).until(
@@ -35,8 +36,4 @@ class LoginPage():
             )
             return error_element.text
         except TimeoutException:
-            print("Timeout: Element not found.")
             return None
-
-
-    

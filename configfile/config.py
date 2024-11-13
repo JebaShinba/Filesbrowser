@@ -23,7 +23,7 @@ def setup_mongodb():
     db = client.get_database(DATABASE_NAME)  # Use your actual database
     collection = db.get_collection(USER_COLLECTION)  # Use your collection
 
-    # Example: Insert some test documents
+    # Sample data to insert into MongoDB (user details)
     sample_data = [
         {
             "username": "testuser1",
@@ -78,23 +78,153 @@ def setup_mongodb():
             "createdAt": "2024-11-05T05:55:09.495Z"
         },
         {
-            "_id": ObjectId("67330291d2ea7592d81572ae"),  # Duplicate _id intentionally
-            "username": "duplicate_user",
-            "password": "duplicate_password",
-            "email": "duplicate@test.com"
-        }
+            "_id": "671f70b2f11c1401cbf07edd",
+            "username": "",
+            "first_name": "admin",
+            "last_name": "admin",
+            "password": "demo",
+            "mode_2fa": "Off",
+            "groups": ["Admin"],
+            "rights": "Admin",
+            "notes": {
+                "info": "this 'notes' field exists only for this default admin user",
+                "p": "donttrustyou"
+            },
+            "vec_2fa": None,
+            "baseurl": "https://demo.filebrowser.org/login?redirect=/files/",
+            "is_valid": False,
+            "expected_error": "success",
+            "createdAt": "2024-10-28T11:08:34.507Z"
+        },
+        {
+            "_id": "671f71988a76e1c09ab851f2",
+            "username": "",
+            "first_name": "admin",
+            "last_name": "admin",
+            "password": "demo",
+            "mode_2fa": "Off",
+            "groups": ["Admin"],
+            "rights": "Admin",
+            "notes": {
+                "info": "this 'notes' field exists only for this default admin user",
+                "p": "donttrustyou"
+            },
+            "vec_2fa": None,
+            "baseurl": "https://demo.filebrowser.org/login?redirect=/files/",
+            "is_valid": False,
+            "expected_error": "Wrong credentials",
+            "createdAt": "2024-10-28T11:12:24.055Z"
+        },
+        {
+            "_id": "671f71abd6fb19d91c706fb4",
+            "username": "demo",
+            "first_name": "admin",
+            "last_name": "admin",
+            "password": "",
+            "mode_2fa": "Off",
+            "groups": ["Admin"],
+            "rights": "Admin",
+            "notes": {
+                "info": "this 'notes' field exists only for this default admin user",
+                "p": "donttrustyou"
+            },
+            "vec_2fa": None,
+            "baseurl": "https://demo.filebrowser.org/login?redirect=/files/",
+            "is_valid": False,
+            "expected_error": "Wrong credentials",
+            "createdAt": "2024-10-28T11:12:43.404Z"
+        },
+        {
+            "_id": "671f71b54b69104645e37af0",
+            "username": "",
+            "first_name": "admin",
+            "last_name": "admin",
+            "password": "",
+            "mode_2fa": "Off",
+            "groups": ["Admin"],
+            "rights": "Admin",
+            "notes": {
+                "info": "this 'notes' field exists only for this default admin user",
+                "p": "donttrustyou"
+            },
+            "vec_2fa": None,
+            "baseurl": "https://demo.filebrowser.org/login?redirect=/files/",
+            "is_valid": False,
+            "expected_error": "Wrong credentials",
+            "createdAt": "2024-10-28T11:12:53.301Z"
+        },
+        {
+            "_id": "671f71d442086dc454e456e2",
+            "username": "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+            "first_name": "admin",
+            "last_name": "admin",
+            "password": "demo",
+            "mode_2fa": "Off",
+            "groups": ["Admin"],
+            "rights": "Admin",
+            "notes": {
+                "info": "this 'notes' field exists only for this default admin user",
+                "p": "donttrustyou"
+            },
+            "vec_2fa": None,
+            "baseurl": "https://demo.filebrowser.org/login?redirect=/files/",
+            "is_valid": False,
+            "expected_error": "Wrong credentials",
+            "createdAt": "2024-10-28T11:13:24.743Z"
+        },
+        {
+            "_id": "671f71eeeedc4f47ad6bd681",
+            "username": "demo",
+            "first_name": "admin",
+            "last_name": "admin",
+            "password": "dqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq",
+            "mode_2fa": "Off",
+            "groups": ["Admin"],
+            "rights": "Admin",
+            "notes": {
+                "info": "this 'notes' field exists only for this default admin user",
+                "p": "donttrustyou"
+            },
+            "vec_2fa": None,
+            "baseurl": "https://demo.filebrowser.org/login?redirect=/files/",
+            "is_valid": False,
+            "expected_error": "Wrong credentials",
+            "createdAt": "2024-10-28T11:13:50.894Z"
+        },
+        {
+            "_id": "671f726f4b0562c323398397",
+            "username": "demo",
+            "first_name": "admin",
+            "last_name": "admin",
+            "password": "          ",
+            "mode_2fa": "Off",
+            "groups": ["Admin"],
+            "rights": "Admin",
+            "notes": {
+                "info": "this 'notes' field exists only for this default admin user",
+                "p": "donttrustyou"
+            },
+            "vec_2fa": None,
+            "baseurl": "https://demo.filebrowser.org/login?redirect=/files/",
+            "is_valid": False,
+            "expected_error": "Wrong credentials",
+            "createdAt": "2024-10-28T11:15:59.889Z"
+        },
     ]
 
-    # Insert sample data if not already present
-    try:
-        collection.insert_many(sample_data, ordered=False)
-        print(f"Test data inserted into {db.name}.{collection.name}")
-    except DuplicateKeyError as e:
-        print(f"Duplicate Key Error encountered: {e}")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-    else:
-        print(f"Test data already exists in {db.name}.{collection.name}")
+    # Insert or update data
+    for data in sample_data:
+        try:
+            collection.update_one(
+                {"_id": data.get("_id")},  # Check by _id
+                {"$set": data},  # Update the document with new data
+                upsert=True  # Insert if not found
+            )
+            print(f"Inserted/Updated: {data.get('username')}")
+        except DuplicateKeyError as e:
+            print(f"Duplicate key error for user: {data.get('username')}. Skipping.")
+        except Exception as e:
+            print(f"Error inserting/updating user {data.get('username')}: {e}")
 
 if __name__ == "__main__":
     setup_mongodb()
