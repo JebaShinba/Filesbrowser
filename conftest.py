@@ -14,19 +14,16 @@ def pytest_runtest_makereport(item, call):
 
     # Only add screenshot if the test failed
     if report.when == 'call' and report.failed:
-        # Get the driver fixture for the current test item
         driver = item.funcargs.get("setup_driver", None)
         if driver:
             # Define screenshot path
             screenshot_path = f"screenshots/{item.name}.png"
-            # Capture screenshot
             driver.save_screenshot(screenshot_path)
-
-            # Embed the screenshot in the HTML report if the pytest-html plugin is enabled
+            
+            # Embed the screenshot in the HTML report
             pytest_html = item.config.pluginmanager.getplugin("html")
             if pytest_html:
-                # Append screenshot as an extra report entry
-                extra = getattr(report, "extra", [])
+                extra = getattr(report, 'extra', [])
                 extra.append(pytest_html.extras.image(screenshot_path, mime_type="image/png"))
                 report.extra = extra
 
@@ -35,5 +32,5 @@ def add_selenium_log(request):
     driver = request.node.funcargs.get("setup_driver", None)
     if driver:
         # Adding browser logs to report
-        for entry in driver.get_log('browser'):
+        for entry in driver.get_log("browser"):
             request.node.user_properties.append(("browser_log", entry))
