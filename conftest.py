@@ -17,14 +17,13 @@ def pytest_runtest_makereport(item, call):
         driver = item.funcargs.get("setup_driver", None)
         if driver:
             # Define screenshot path
-            screenshot_path = f"screenshots/{item.name}.png"
+            screenshot_path = os.path.join("screenshots", f"{item.nodeid.replace('::', '_')}.png")
             driver.save_screenshot(screenshot_path)
-            
             # Embed the screenshot in the HTML report
-            pytest_html = item.config.pluginmanager.getplugin("html")
+            pytest_html = item.config.pluginmanager.getplugin('html')
             if pytest_html:
                 extra = getattr(report, 'extra', [])
-                extra.append(pytest_html.extras.image(screenshot_path, mime_type="image/png"))
+                extra.append(pytest_html.extras.image(screenshot_path))
                 report.extra = extra
 
 @pytest.fixture(autouse=True)
@@ -32,5 +31,13 @@ def add_selenium_log(request):
     driver = request.node.funcargs.get("setup_driver", None)
     if driver:
         # Adding browser logs to report
-        for entry in driver.get_log("browser"):
+        for entry in driver.get_log('browser'):
             request.node.user_properties.append(("browser_log", entry))
+
+# Ensure screenshots are uploaded as artifacts in GitHub Actions
+def pytest_sessionfinish(session, exitstatus):
+    if os.getenv("GITHUB_ACTIONS"):
+        artifacts_path = os.path.join(os.getenv("GITHUB_WORKSPACE", "."), "screenshots")
+        os.makedirs(artifacts_path, exist_ok=True)
+        for file_name in os.listdir("screenshots"):
+            os.rename(os.path.join("screenshots", file_name), os.path.join(artifacts_path, file_name))
