@@ -72,7 +72,12 @@ jobs:
             name: selenium-test-report
             path: Selenium_report.html
         
-
+    - name: Archive Screenshots for Failed Tests
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+              name: selenium-screenshots
+              path: screenshots/
 
 
 
