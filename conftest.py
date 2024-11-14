@@ -1,28 +1,30 @@
+import base64
 import pytest
 import os
 
-# Define the screenshot directory 
-screenshot_dir = "screenshots"
-
-# Create the screenshots directory if it doesn't exist
-if not os.path.exists(screenshot_dir):
-    os.makedirs(screenshot_dir)
-
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    # Execute all other hooks to obtain the report object
     outcome = yield
     report = outcome.get_result()
 
-    # Only add screenshot if the test failed
     if report.when == 'call' and report.failed:
-        driver = item.funcargs.get("setup_driver", None)
+        driver = item.funcargs.get("driver")
         if driver:
-            # Define the screenshot path relative to the HTML report
-            screenshot_path = os.path.join(screenshot_dir, f"{item.name}.png")
-            driver.save_screenshot(screenshot_path)
-            # Embed the screenshot in the HTML report
-            pytest_html = item.config.pluginmanager.getplugin('html')
-            extra = getattr(report, 'extra', [])
-            extra.append(pytest_html.extras.image(screenshot_path))
-            report.extra = extra
+            screenshot_path = f"screenshots/{item.name}.png"
+            os.makedirs(os.path.dirname(screenshot_path), exist_ok=True)
+
+            # Save screenshot and encode it as Base64
+            if driver.save_screenshot(screenshot_path):
+                print(f"Screenshot saved at: {screenshot_path}")
+                with open(screenshot_path, "rb") as image_file:
+                    encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+
+                # Add the Base64 image to the HTML report
+                pytest_html = item.config.pluginmanager.getplugin('html')
+                if pytest_html:
+                    extra = getattr(report, 'extra', [])
+                    img_html = f'<img src="data:image/png;base64,{encoded_string}" alt="screenshot" />'
+                    extra.append(pytest_html.extras.html(img_html))
+                    report.extra = extra
+            else:
+                print("Failed to save screenshot.")
