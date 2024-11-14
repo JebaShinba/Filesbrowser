@@ -76,7 +76,7 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v3
       with:
-              name: selenium-screenshots
+              name: selenium Failed Tests-screenshots
               path: screenshots/
 
 
