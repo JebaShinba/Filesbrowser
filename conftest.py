@@ -1,43 +1,40 @@
 import pytest
 import os
 
-# Ensure the screenshots directory exists
-if not os.path.exists("screenshots"):
-    os.makedirs("screenshots")
-
-# Hook for adding additional information in the HTML report
+# Hook for adding additional information to the HTML report
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    # Execute all other hooks to obtain the report object
+    # Execute the test and get the result
     outcome = yield
-    report = outcome.get_result()
-
-    # Only add screenshot if the test failed
-    if report.when == 'call' and report.failed:
-        driver = item.funcargs.get("setup_driver", None)
+    result = outcome.get_result()
+    
+    # Check if the test failed at the call stage
+    if result.when == 'call' and result.failed:
+        driver = item.funcargs.get("driver", None)
         if driver:
-            # Define screenshot path
-            screenshot_path = os.path.join("screenshots", f"{item.nodeid.replace('::', '_')}.png")
+            # Ensure the screenshots directory exists
+            screenshots_dir = "screenshots"
+            os.makedirs(screenshots_dir, exist_ok=True)
+            print(f"Created screenshots directory: {screenshots_dir}")
+            
+            # Define the screenshot path
+            screenshot_path = f"{screenshots_dir}/{item.name}.png"
             driver.save_screenshot(screenshot_path)
-            # Embed the screenshot in the HTML report
+            print(f"Saved screenshot for failed test '{item.name}' at {screenshot_path}")
+            
+            # Attach screenshot to the HTML report
             pytest_html = item.config.pluginmanager.getplugin('html')
             if pytest_html:
-                extra = getattr(report, 'extra', [])
+                extra = getattr(result, 'extra', [])
                 extra.append(pytest_html.extras.image(screenshot_path))
-                report.extra = extra
+                result.extra = extra
+                print(f"Attached screenshot to HTML report for test '{item.name}'")
 
 @pytest.fixture(autouse=True)
 def add_selenium_log(request):
-    driver = request.node.funcargs.get("setup_driver", None)
+    driver = request.node.funcargs.get("driver")
     if driver:
         # Adding browser logs to report
         for entry in driver.get_log('browser'):
             request.node.user_properties.append(("browser_log", entry))
-
-# Ensure screenshots are uploaded as artifacts in GitHub Actions
-def pytest_sessionfinish(session, exitstatus):
-    if os.getenv("GITHUB_ACTIONS"):
-        artifacts_path = os.path.join(os.getenv("GITHUB_WORKSPACE", "."), "screenshots")
-        os.makedirs(artifacts_path, exist_ok=True)
-        for file_name in os.listdir("screenshots"):
-            os.rename(os.path.join("screenshots", file_name), os.path.join(artifacts_path, file_name))
+        print(f"Added browser log for test '{request.node.name}'")
