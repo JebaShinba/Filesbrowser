@@ -1,7 +1,7 @@
 import pytest
 import os
 
-# Define the screenshot directory (relative to the project root or report location)
+# Define the screenshot directory 
 screenshot_dir = "screenshots"
 
 # Create the screenshots directory if it doesn't exist
