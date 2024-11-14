@@ -80,7 +80,6 @@ def setup_mongodb():
 
 
 
-
         {
             "_id": ObjectId("6729bf3c523f6133a28fc714"),
             "username": "Test",
@@ -241,7 +240,7 @@ def setup_mongodb():
             collection.update_one(
                 {"_id": data.get("_id")},  # Check by _id
                 {"$set": data},  # Update the document with new data
-                upsert=True  # Insert if not found
+                upsert=False  # Insert if not found
             )
             print(f"Inserted/Updated: {data.get('username')}")
         except DuplicateKeyError as e:
