@@ -1,12 +1,13 @@
 import pytest
 import os
 
-# Ensure the screenshots directory exists
-screenshot_dir = os.path.abspath("screenshots")
+# Define the screenshot directory (relative to the project root or report location)
+screenshot_dir = "screenshots"
+
+# Create the screenshots directory if it doesn't exist
 if not os.path.exists(screenshot_dir):
     os.makedirs(screenshot_dir)
 
-# Hook for adding additional information in the HTML report
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     # Execute all other hooks to obtain the report object
@@ -17,7 +18,7 @@ def pytest_runtest_makereport(item, call):
     if report.when == 'call' and report.failed:
         driver = item.funcargs.get("setup_driver", None)
         if driver:
-            # Define absolute screenshot path
+            # Define the screenshot path relative to the HTML report
             screenshot_path = os.path.join(screenshot_dir, f"{item.name}.png")
             driver.save_screenshot(screenshot_path)
             # Embed the screenshot in the HTML report
