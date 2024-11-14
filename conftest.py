@@ -1,7 +1,6 @@
 import pytest
 import os
 
-# Hook for adding additional information to the HTML report
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     # Execute the test and get the result
@@ -29,12 +28,3 @@ def pytest_runtest_makereport(item, call):
                 extra.append(pytest_html.extras.image(screenshot_path))
                 result.extra = extra
                 print(f"Attached screenshot to HTML report for test '{item.name}'")
-
-@pytest.fixture(autouse=True)
-def add_selenium_log(request):
-    driver = request.node.funcargs.get("driver")
-    if driver:
-        # Adding browser logs to report
-        for entry in driver.get_log('browser'):
-            request.node.user_properties.append(("browser_log", entry))
-        print(f"Added browser log for test '{request.node.name}'")
