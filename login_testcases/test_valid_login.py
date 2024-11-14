@@ -41,7 +41,7 @@ def test_login_with_valid_users(driver, mongo_client):
         # Ensure all necessary keys are present
         if not all(key in user_details for key in required_keys):
             print("Skipping login due to missing keys:", user_details)
-            continue  # Skip to the next user 
+            continue  # Skip to the next user if keys are missing
 
         username = user_details["username"]
         password = user_details["password"]
