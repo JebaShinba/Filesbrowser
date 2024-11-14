@@ -95,10 +95,10 @@ class TestValidLogin:
             lg.setUsername(username)  # Enter the username
             lg.setPassword(password)  # Enter the corresponding password
             lg.clickLogin()
-            actual_error = lg.actualError()
+            actualerror = lg.actualError()
 
             # Assert that the actual error matches the expected error
-            assert expected_error == actual_error, (
+            assert expected_error == actualerror, (
                 f"Failed for Username: '{username}' with Password: '{password}'. "
-                f"Expected error: '{expected_error}', but got: '{actual_error}'"
+                f"Expected error: '{expected_error}', but got: '{actualerror}'"
             )
