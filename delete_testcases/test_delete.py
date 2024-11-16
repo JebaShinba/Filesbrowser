@@ -8,9 +8,14 @@ import time
 
 @pytest.fixture(scope="class")
 def setup_class(request):
-    """Setup Selenium WebDriver for the test class."""
-    driver = webdriver.Chrome()  # Ensure ChromeDriver is installed and on PATH
-    driver.implicitly_wait(10)
+    """Setup Selenium WebDriver for the test class in headless mode."""
+    options = Options()
+    options.add_argument("--headless")  # Enable headless mode
+    options.add_argument("--no-sandbox")  # Required for some environments (e.g., Docker)
+    options.add_argument("--disable-dev-shm-usage")  # For some environments with limited resources
+
+    driver = webdriver.Chrome(options=options)  # Ensure ChromeDriver is installed and on PATH
+    driver.implicitly_wait(30)
     request.cls.driver = driver
     yield
     driver.quit()
