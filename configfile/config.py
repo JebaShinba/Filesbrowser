@@ -33,7 +33,26 @@ def setup_mongodb():
             "is_valid": True,
             "baseurl": "https://demo.filebrowser.org/login?"
         },
-        
+
+        {
+            "_id": ObjectId("6729bf3c523f6133a28fc714"),
+            "username": "Test1",
+            "first_name": "Test",
+            "last_name": "one",
+            "password": "test",
+            "mode_2fa": "Off",
+            "rights": "Admin",
+            "notes": {
+                "info": "this 'notes' field exists only for this default admin user",
+                "p": "iloveyou"
+            },
+            "vec_2fa": None,
+            "baseurl": "https://demo.filebrowser.org/login?redirect=/files/",
+            "is_valid": False,
+            "expected_error": "Wrong credentials",
+            "createdAt": "2024-11-05T05:55:09.495Z"
+        },
+
         {
             "_id": ObjectId("67330291d2ea7592d81572ae"),
             "username": "demo",
@@ -53,6 +72,8 @@ def setup_mongodb():
             "expected_error": "Wrong credentials",
             "createdAt": "2024-11-05T06:14:52.021Z"
         },
+
+
         
     ]
     collection.insert_many(sample_data)
