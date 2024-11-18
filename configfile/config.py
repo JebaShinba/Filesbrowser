@@ -1,83 +1,26 @@
-import os
 from pymongo import MongoClient
-from pymongo.errors import ConnectionFailure
-from bson import ObjectId  # Import ObjectId for MongoDB
 
-MONGO_URI = "mongodb://127.0.0.1:27017/"  # MongoDB URI
-DATABASE_NAME = "sampleupload"  # Your database name
-USER_COLLECTION = "users"  # Your collection name
+MONGO_URI = "mongodb://127.0.0.1:27017/"
+DATABASE_NAME = "your_database_name"  # Use your actual database name
+USER_COLLECTION = "users"  # Corrected variable name
+FILES_COLLECTION = "files"
 
-def setup_mongodb():
-    # Retrieve MongoDB URI from environment variable if set
-    mongo_uri = os.getenv("MONGO_URI", MONGO_URI)
-    try:
-        # Connect to MongoDB
-        client = MongoClient(mongo_uri, serverSelectionTimeoutMS=5000)
-        client.admin.command('ping')  # Ping to check connection
-        print("MongoDB connected successfully!")
-    except ConnectionFailure as e:
-        print(f"Failed to connect to MongoDB: {e}")
-        exit(1)
+def get_db():
+    """Connect to MongoDB and return the database instance."""
+    client = MongoClient(MONGO_URI)
+    db = client[DATABASE_NAME]
+    return db
 
-    # Set up test data (example)
-    db = client.get_database(DATABASE_NAME)  # Use your actual database
-    collection = db.get_collection(USER_COLLECTION)  # Use your collection
+def get_users_collection():
+    """Get the users collection from the database."""
+    db = get_db()
+    user_collection = db[USER_COLLECTION]  # Corrected to use a single bracket
 
-    # Example: Insert some test documents
-    sample_data = [
-        {
-            "_id": "67359590d8a998299eb472e8",
-            "username": "testselenium1",
-            "password": "password123",
-            "email": "user1@test.com",
-            "is_valid": True,
-            "baseurl": "https://demo.filebrowser.org/login?"
-        },
+    return user_collection  # Return the users collection
 
-        {
-            "_id": ObjectId("6729bf3c523f6133a28fc714"),
-            "username": "Test1",
-            "first_name": "Test",
-            "last_name": "one",
-            "password": "test",
-            "mode_2fa": "Off",
-            "rights": "Admin",
-            "notes": {
-                "info": "this 'notes' field exists only for this default admin user",
-                "p": "iloveyou"
-            },
-            "vec_2fa": None,
-            "baseurl": "https://demo.filebrowser.org/login?redirect=/files/",
-            "is_valid": False,
-            "expected_error": "Wrong credentials",
-            "createdAt": "2024-11-05T05:55:09.495Z"
-        },
+def get_files_collection():
+    """Get the users collection from the database."""
+    db = get_db()
+    files_collection = db[FILES_COLLECTION]  # Corrected to use a single bracket
 
-        {
-            "_id": ObjectId("67330291d2ea7592d81572ae"),
-            "username": "demo",
-            "first_name": "admin",
-            "last_name": "admin",
-            "password": "demo",
-            "mode_2fa": "Off",
-            "groups": ["Admin"],
-            "rights": "Admin",
-            "notes": {
-                "info": "this 'notes' field exists only for this default user",
-                "p": "donttrustyou"
-            },
-            "vec_2fa": None,
-            "baseurl": "https://demo.filebrowser.org/login?redirect=/files/",
-            "is_valid": False,
-            "expected_error": "Wrong credentials",
-            "createdAt": "2024-11-05T06:14:52.021Z"
-        },
-
-
-        
-    ]
-    collection.insert_many(sample_data)
-    print(f"Test data inserted into {db.name}.{collection.name}")
-
-if __name__ == "__main__":
-    setup_mongodb()
+    return files_collection  # Return the users collection
