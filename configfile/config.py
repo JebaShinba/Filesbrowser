@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 
 MONGO_URI = "mongodb://127.0.0.1:27017/"
-DATABASE_NAME = "your_database_name"  # Use your actual database name
+DATABASE_NAME = "sampleupload"  # Use your actual database name
 USER_COLLECTION = "users"  # Corrected variable name
 FILES_COLLECTION = "files"
 
