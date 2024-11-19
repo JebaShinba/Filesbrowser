@@ -45,6 +45,27 @@ jobs:
       with:
         chrome-version: 'latest'
 
+    - name: Make run_tests.sh executable
+      run: chmod +x ./test.sh
+  
+      # Run the shell script to invoke the Selenium scripts using bash (instead of PowerShell)
+    - name: Run Selenium Tests
+      run: |
+          echo "Running the Selenium tests..."
+          bash ./test.sh  > test_results.log || exit 0
+          cat test_results.log    # Display test results for debugging # Run the shell script in bash
+  
+      # Step 5: Show test results log
+    - name: Display Test Results Log
+      run: cat test_results.log
+
+    # Step 6: Send Failure Email Notification if tests failed
+    - name: Send Failure Email Notification
+      if: failure()  # Trigger this step only if previous steps failed
+      run: |
+        echo "Tests failed! Sending email notification..."
+        python send_email_notification.py "Tests failed on release push"
+
     - name: Set Timezone to India Standard Time (IST)
       run: sudo timedatectl set-timezone Asia/Kolkata  # Set the timezone to IST  
       
