@@ -12,7 +12,7 @@ def mongo_client():
     db = client["sampleupload"]  # Use your actual database name
     users_collection = db["users"]  # Use your actual collection name
     yield users_collection
-    client.close()  # Close the MongoDB client connection
+    client.close()  # Close the MongoDB client conne
     print("MongoDB client connection closed.")
 
 # Fixture for Selenium WebDriver with headless mode
