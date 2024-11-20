@@ -1,80 +1,112 @@
 import os
-import pytest
+import logging
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
+from bson import ObjectId
+from datetime import datetime
 
-# MongoDB configuration
-MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
-DATABASE_NAME = "sampleupload"
-COLLECTION_NAME = "users"
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-@pytest.fixture(scope="module")
-def mongo_client():
+def setup_mongodb():
     """
-    Fixture to set up and return a MongoDB client.
-    Tears down the database after tests.
+    Set up the MongoDB connection and insert test data.
     """
+    # Retrieve MongoDB URI from environment variable
+    mongo_uri = os.getenv("MONGO_URI", "mongodb://localhost:27017")
+    
     try:
-        client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+        # Connect to MongoDB
+        client = MongoClient(mongo_uri, serverSelectionTimeoutMS=5000)
         client.admin.command('ping')  # Ping to check connection
-        print("MongoDB connected successfully!")
+        logger.info("MongoDB connected successfully!")
     except ConnectionFailure as e:
-        pytest.fail(f"Failed to connect to MongoDB: {e}")
+        logger.error(f"Failed to connect to MongoDB: {e}")
+        exit(1)
 
-    # Return the client for use in tests
-    yield client
+    # Set up test data (example)
+    db = client.get_database('sampleupload')  # Use a database for testing
+    collection = db.get_collection('users')  # Use your actual collection name
 
-    # Teardown: Drop the test database after tests
-    client.drop_database(DATABASE_NAME)
-    print(f"Database {DATABASE_NAME} dropped after tests.")
-
-@pytest.fixture(scope="module")
-def setup_test_data(mongo_client):
-    """
-    Fixture to insert test data into the MongoDB collection.
-    """
-    db = mongo_client[DATABASE_NAME]
-    collection = db[COLLECTION_NAME]
-
-    # Insert sample test data
+    # Example: Insert some test documents
     sample_data = [
         {
-            "username": "testuser1", 
-            "password": "password123", 
-            "email": "user1@test.com", 
-            "is_valid": False, 
-            "baseurl": "https://demo.filebrowser.org/login?redirect=/files/"
+            "_id": ObjectId("671f70b2f11c1401cbf07edd"),
+            "username": "",
+            "first_name": "admin",
+            "last_name": "admin",
+            "password": "demo",
+            "mode_2fa": "Off",
+            "groups": ["Admin"],
+            "rights": "Admin",
+            "notes": {"info": "this 'notes' field exists only for this default admin user", "p": "donttrustyou"},
+            "vec_2fa": None,  # Corrected null to None
+            "baseurl": "https://demo.filebrowser.org/login?redirect=/files/",
+            "is_valid": False,
+            "expected_error": "success",
+            "createdAt": datetime(2024, 10, 28, 11, 8, 34)
         },
         {
-            "username": "testuser2", 
-            "password": "password456", 
-            "email": "user2@test.com", 
-            "is_valid": False, 
-            "baseurl": "https://demo.filebrowser.org/login?redirect=/files/"
+            "_id": ObjectId("671f71988a76e1c09ab851f2"),
+            "username": "",
+            "first_name": "admin",
+            "last_name": "admin",
+            "password": "demo",
+            "mode_2fa": "Off",
+            "groups": ["Admin"],
+            "rights": "Admin",
+            "notes": {"info": "this 'notes' field exists only for this default admin user", "p": "donttrustyou"},
+            "vec_2fa": None,  # Corrected null to None
+            "baseurl": "https://demo.filebrowser.org/login?redirect=/files/",
+            "is_valid": False,
+            "expected_error": "Wrong credentials",
+            "createdAt": datetime(2024, 10, 28, 11, 12, 24)
+        },
+        {
+            "_id": ObjectId("671f71abd6fb19d91c706fb4"),
+            "username": "demo",
+            "first_name": "admin",
+            "last_name": "admin",
+            "password": "",
+            "mode_2fa": "Off",
+            "groups": ["Admin"],
+            "rights": "Admin",
+            "notes": {"info": "this 'notes' field exists only for this default admin user", "p": "donttrustyou"},
+            "vec_2fa": None,  # Corrected null to None
+            "baseurl": "https://demo.filebrowser.org/login?redirect=/files/",
+            "is_valid": False,
+            "expected_error": "Wrong credentials",
+            "createdAt": datetime(2024, 10, 28, 11, 12, 43)
+        },
+        {
+            "_id": ObjectId("671f44297ff62ef35ec47a47"),
+            "username": "demo",
+            "first_name": "admin",
+            "last_name": "admin",
+            "password": "demo",
+            "mode_2fa": "Off",
+            "groups": ["Admin"],
+            "rights": "Admin",
+            "notes": {
+                "info": "this 'notes' field exists only for this default admin user",
+                "p": "donttrustyou"
+            },
+            "vec_2fa": None,  # Corrected null to None
+            "baseurl": "https://demo.filebrowser.org/login?redirect=/files/",
+            "is_valid": True,
+            "expected_error": "success",
+            "createdAt": datetime(2024, 10, 28, 7, 58, 33, 761000)
         }
     ]
-    collection.insert_many(sample_data)
-    print(f"Test data inserted into {DATABASE_NAME}.{COLLECTION_NAME}")
-
-    return collection
-
-def test_mongo_connection(mongo_client):
-    """
-    Test that MongoDB connection is successful.
-    """
+    
+    # Insert test documents into MongoDB collection
     try:
-        mongo_client.admin.command('ping')
-        assert True, "MongoDB connection test passed."
-    except ConnectionFailure:
-        pytest.fail("MongoDB connection test failed.")
+        collection.insert_many(sample_data)
+        logger.info(f"Test data inserted into {db.name}.{collection.name}")
+    except Exception as e:
+        logger.error(f"Failed to insert test data: {e}")
+        exit(1)
 
-def test_data_insertion(setup_test_data):
-    """
-    Test that data is correctly inserted into the collection.
-    """
-    collection = setup_test_data
-    # Assert the number of documents in the collection
-    assert collection.count_documents({}) == 2, "Data insertion test passed."
-    # Verify specific document
-    user = collection.find_one({"username": "testuser1"})
-    assert user["email"] == "user1@test.com", "Email verification test passed."
+if __name__ == "__main__":
+    setup_mongodb()
