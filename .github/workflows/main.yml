@@ -48,7 +48,7 @@ jobs:
     - name: Make run_tests.sh executable
       run: chmod +x ./test.sh
   
-      # Run the shell script to invoke the Selenium scripts using bash (instead of PowerShell)
+      # Run the shell script to invoke the Selenium scripts using bash 
     - name: Run Selenium Tests
       run: |
           echo "Running the Selenium tests..."
