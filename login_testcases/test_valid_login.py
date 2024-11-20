@@ -1,89 +1,82 @@
-import pytest
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import pytest
 from homeobjects.test_login import LoginPage
-from pymongo import MongoClient  # Assuming MongoClient is defined in config
+from configfile.config import MongoClient  # Assuming MongoClient is defined in config
+import time
+
 
 @pytest.fixture(scope="module")
 def mongo_client():
-    """
-    Fixture to initialize MongoDB client and fetch valid users.
-    """
-    client = MongoClient("mongodb://127.0.0.1:27017/")  # Update this URI as necessary
-    db = client["sampleupload"]  # Use your actual database name
-    users_collection = db["users"]  # Use your actual collection name
-    valid_users = list(users_collection.find({"is_valid": True}))
-    
-    if not valid_users:
-        pytest.fail("No valid users found in the database!")
-    
-    return valid_users, client
-
-@pytest.fixture(scope="module")
-def webdriver_instance():
-    """
-    Fixture to set up the Selenium WebDriver with necessary options.
-    """
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--window-size=1920,1080")
-
-    driver = webdriver.Chrome(options=chrome_options)
-    driver.implicitly_wait(5)
-    
-    yield driver  # This will be used in the tests
-    
-    driver.quit()  # Close the browser after the test is done
-
-def test_login_with_valid_users(mongo_client, webdriver_instance):
-    """
-    Test login with valid users fetched from MongoDB.
-    """
-    valid_users, _ = mongo_client
-    driver = webdriver_instance
-
-    for index, user_details in enumerate(valid_users):
-        with pytest.subtests.test(user_index=index):
-            required_keys = ["username", "password", "baseurl"]
-            
-            # Ensure all necessary keys are present
-            if not all(key in user_details for key in required_keys):
-                print("Skipping login due to missing keys:", user_details)
-                continue  # Skip to the next user if keys are missing
-
-            username = user_details["username"]
-            password = user_details["password"]
-            base_url = user_details["baseurl"]
-
-            # Print the username and password being tested
-            print(f"Testing login for Username: '{username}' with Password: '{password}'")
-
-            # Navigate to the base URL
-            try:
-                driver.get(base_url)
-                print("Navigated to:", base_url)
-            except Exception as e:
-                print("Error navigating to base URL:", e)
-                continue  # Skip to the next user if navigation fails
-
-            # Instantiate the LoginPage object
-            lg = LoginPage(driver)
-            lg.setUsername(username)  # Enter the username
-            lg.setPassword(password)  # Enter the corresponding password
-            lg.clickLogin()
-
-@pytest.fixture(scope="module", autouse=True)
-def cleanup(mongo_client):
-    """
-    Cleanup MongoDB client after the test.
-    """
-    _, client = mongo_client
-    yield
-    client.close()  # Close the MongoDB client after the tests are done
+    client = MongoClient("mongodb://127.0.0.1:27017/")
+    db = client["sampleupload"]
+    users_collection = db["users"]
+    yield users_collection
+    client.close()
     print("MongoDB client connection closed.")
 
-if __name__ == '__main__':
-    pytest.main()
+
+@pytest.fixture(scope="module")
+def driver():
+    options = webdriver.ChromeOptions()
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--window-size=1920,1080")
+
+    driver = webdriver.Chrome(options=options)
+    driver.implicitly_wait(5)
+    yield driver
+    driver.quit()
+    print("Browser closed.")
+
+
+def test_login_with_valid_users(driver, mongo_client):
+    valid_users = list(mongo_client.find({"is_valid": True}))
+    assert valid_users, "No valid users found in the database!"
+
+    for index, user_details in enumerate(valid_users):
+        required_keys = ["username", "password", "baseurl"]
+
+        if not all(key in user_details for key in required_keys):
+            pytest.skip(f"Skipping login due to missing keys in user: {user_details}")
+            continue
+
+        username = user_details["username"]
+        password = user_details["password"]
+        base_url = user_details["baseurl"]
+
+        print(f"Testing login for Username: '{username}' with Password: '{password}'")
+
+        # Navigate to the base URL
+        try:
+            driver.get(base_url)
+            print("Navigated to:", base_url)
+        except Exception as e:
+            pytest.fail(f"Error navigating to base URL: {e}")
+            continue
+
+        # Perform login
+        login_page = LoginPage(driver)
+        login_page.setUsername(username)
+        login_page.setPassword(password)
+        login_page.clickLogin()
+        
+        time.sleep(5)  # Short delay for debugging; remove if unnecessary
+        
+        try:
+            # Verify successful login
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//a[contains(text(), 'Logout')]"))
+            )
+            print(f"Login successful for user: {username}")
+        except TimeoutException:
+            # Capture and log page source for debugging
+            print("Login failed for user:", username)
+            print("Page source at the time of failure:")
+            print(driver.page_source)
+            pytest.fail(f"Timeout while waiting for successful login confirmation for user: {username}")

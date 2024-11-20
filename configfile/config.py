@@ -2,8 +2,7 @@ import os
 import logging
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
-from bson import ObjectId
-from datetime import datetime
+
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -32,7 +31,7 @@ def setup_mongodb():
     # Example: Insert some test documents
     sample_data = [
         {
-            "_id": ObjectId("671f70b2f11c1401cbf07edd"),
+            
             "username": "",
             "first_name": "admin",
             "last_name": "admin",
@@ -44,11 +43,11 @@ def setup_mongodb():
             "vec_2fa": None,  # Corrected null to None
             "baseurl": "https://demo.filebrowser.org/login?redirect=/files/",
             "is_valid": False,
-            "expected_error": "success",
-            "createdAt": datetime(2024, 10, 28, 11, 8, 34)
+            "expected_error": "wrong crenditals",
+            
         },
         {
-            "_id": ObjectId("671f71988a76e1c09ab851f2"),
+            
             "username": "",
             "first_name": "admin",
             "last_name": "admin",
@@ -61,10 +60,10 @@ def setup_mongodb():
             "baseurl": "https://demo.filebrowser.org/login?redirect=/files/",
             "is_valid": False,
             "expected_error": "Wrong credentials",
-            "createdAt": datetime(2024, 10, 28, 11, 12, 24)
+            
         },
         {
-            "_id": ObjectId("671f71abd6fb19d91c706fb4"),
+            
             "username": "demo",
             "first_name": "admin",
             "last_name": "admin",
@@ -77,10 +76,10 @@ def setup_mongodb():
             "baseurl": "https://demo.filebrowser.org/login?redirect=/files/",
             "is_valid": False,
             "expected_error": "Wrong credentials",
-            "createdAt": datetime(2024, 10, 28, 11, 12, 43)
+            
         },
         {
-            "_id": ObjectId("671f44297ff62ef35ec47a47"),
+            
             "username": "demo",
             "first_name": "admin",
             "last_name": "admin",
@@ -96,7 +95,7 @@ def setup_mongodb():
             "baseurl": "https://demo.filebrowser.org/login?redirect=/files/",
             "is_valid": True,
             "expected_error": "success",
-            "createdAt": datetime(2024, 10, 28, 7, 58, 33, 761000)
+            
         }
     ]
     
