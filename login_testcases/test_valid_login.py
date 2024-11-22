@@ -1,5 +1,5 @@
 from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -7,6 +7,7 @@ import pytest
 from homeobjects.test_login import LoginPage
 from configfile.config import MongoClient  # Assuming MongoClient is defined in config
 import time
+import os
 
 
 @pytest.fixture(scope="module")
@@ -22,13 +23,20 @@ def mongo_client():
 @pytest.fixture(scope="module")
 def driver():
     options = webdriver.ChromeOptions()
-    options.add_argument("--headless")
+    options.add_argument("--headless")  # Remove this line for visual debugging
     options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--window-size=1920,1080")
+    
+    # Check for chromedriver path or use default
+    chromedriver_path = os.getenv("CHROMEDRIVER_PATH", "chromedriver")
+    try:
+        driver = webdriver.Chrome(executable_path=chromedriver_path, options=options)
+    except WebDriverException as e:
+        pytest.fail(f"WebDriverException: {e}. Ensure 'chromedriver' is installed and in PATH.")
+        return
 
-    driver = webdriver.Chrome(options=options)
     driver.implicitly_wait(5)
     yield driver
     driver.quit()
@@ -65,8 +73,8 @@ def test_login_with_valid_users(driver, mongo_client):
         login_page.setUsername(username)
         login_page.setPassword(password)
         login_page.clickLogin()
-        
-        time.sleep(5)  # Short delay for debugging; remove if unnecessary
+
+        time.sleep(2)  # Short delay to allow for any animations, if needed
         
         try:
             # Verify successful login
@@ -76,7 +84,7 @@ def test_login_with_valid_users(driver, mongo_client):
             print(f"Login successful for user: {username}")
         except TimeoutException:
             # Capture and log page source for debugging
-            print("Login failed for user:", username)
+            print(f"Login failed for user: {username}")
             print("Page source at the time of failure:")
             print(driver.page_source)
             pytest.fail(f"Timeout while waiting for successful login confirmation for user: {username}")

@@ -439,9 +439,9 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
 }
 </script>
     <h1>report.html</h1>
-    <p>Report generated on 20-Nov-2024 at 17:18:09 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.2.0</p>
+    <p>Report generated on 22-Nov-2024 at 12:08:36 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v3.2.0</p>
     <h2>Summary</h2>
-    <p>2 tests ran in 62.60 seconds. </p>
+    <p>2 tests ran in 30.40 seconds. </p>
     <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="passed">1 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="failed">1 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filterTable(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>
     <h2>Results</h2>
     <table id="results-table">
@@ -456,26 +456,164 @@ function filterTable(elem) { // eslint-disable-line no-unused-vars
       <tbody class="failed results-table-row">
         <tr>
           <td class="col-result">Failed</td>
-          <td class="col-name">login_testcases/test_invalid_login.py::TestValidLogin::test_login_with_invalid_users</td>
-          <td class="col-duration">40.50</td>
+          <td class="col-name">login_testcases/test_valid_login.py::test_login_with_valid_users</td>
+          <td class="col-duration">18.40</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
-            <div class="log">self = &lt;login_testcases.test_invalid_login.TestValidLogin object at 0x000002B1D378A8D0&gt;<br/>setup_driver = &lt;selenium.webdriver.chrome.webdriver.WebDriver (session=&quot;f8ecf97c9bd224a567dce9a6184735b1&quot;)&gt;<br/>invalid_users = [{&#x27;_id&#x27;: ObjectId(&#x27;671f71988a76e1c09ab851f2&#x27;), &#x27;baseurl&#x27;: &#x27;https://demo.filebrowser.org/login?redirect=/files/&#x27;, &#x27;crea.../&#x27;, &#x27;createdAt&#x27;: datetime.datetime(2024, 10, 28, 11, 15, 59, 189000), &#x27;expected_error&#x27;: &#x27;Wrong credentials&#x27;, ...}, ...]<br/><br/>    def test_login_with_invalid_users(self, setup_driver, invalid_users):<br/>        # Debugging: Check if invalid_users is being passed correctly<br/>        logger.info(f&quot;Invalid users fetched: {invalid_users}&quot;)<br/>    <br/>        # Iterate over invalid users and perform login<br/>        for index, user_details in enumerate(invalid_users):<br/>            logger.debug(f&quot;Index: {index}, User details: {user_details}&quot;)<br/>    <br/>            required_keys = [&quot;username&quot;, &quot;password&quot;, &quot;baseurl&quot;, &quot;expected_error&quot;]<br/>    <br/>            # Ensure all necessary keys are present<br/>            if not all(key in user_details for key in required_keys):<br/>                logger.warning(f&quot;Skipping login due to missing keys: {user_details}&quot;)<br/>                pytest.skip(f&quot;Skipping due to missing keys: {user_details}&quot;)<br/>    <br/>            username = user_details[&quot;username&quot;]<br/>            password = user_details[&quot;password&quot;]<br/>            base_url = user_details[&quot;baseurl&quot;]<br/>            expected_error = user_details[&quot;expected_error&quot;]<br/>    <br/>            logger.info(f&quot;Testing login for Username: &#x27;{username}&#x27; with Password: &#x27;{password}&#x27;, expected error: &#x27;{expected_error}&#x27;&quot;)<br/>    <br/>            # Handle empty username or password case<br/>            if not username or not password:<br/>                logger.error(f&quot;Empty username or password found for user details: {user_details}&quot;)<br/>                expected_error = &quot;Wrong credentials&quot;  # Adjust expected error as needed<br/>    <br/>            # Navigate to the base URL<br/>            try:<br/>                setup_driver.get(base_url)<br/>                logger.info(f&quot;Navigated to: {base_url}&quot;)<br/>            except Exception as e:<br/>                logger.error(f&quot;Error navigating to base URL: {e}&quot;)<br/>                pytest.skip(f&quot;Skipping due to navigation error: {e}&quot;)<br/>    <br/>            # Instantiate the LoginPage object and attempt login<br/>            lg = LoginPage(setup_driver)<br/>            lg.setUsername(username)  # Enter the username<br/>            lg.setPassword(password)  # Enter the corresponding password<br/>            lg.clickLogin()<br/>            actualerror = lg.actualError()<br/>    <br/>            # Assert that the actual error matches the expected error<br/>&gt;           assert expected_error == actualerror, (<br/>                f&quot;Failed for Username: &#x27;{username}&#x27; with Password: &#x27;{password}&#x27;. &quot;<br/>                f&quot;Expected error: &#x27;{expected_error}&#x27;, but got: &#x27;{actualerror}&#x27;&quot;<br/>            )<br/><span class="error">E           AssertionError: Failed for Username: &#x27;demo&#x27; with Password: &#x27;demo&#x27;. Expected error: &#x27;Wrong credentials&#x27;, but got: &#x27;None&#x27;</span><br/><span class="error">E           assert &#x27;Wrong credentials&#x27; == None</span><br/><br/>login_testcases\test_invalid_login.py:104: AssertionError<br/> -------------------------------Captured log call-------------------------------- <br/>ERROR    login_testcases.test_invalid_login:test_invalid_login.py:85 Empty username or password found for user details: {&#x27;_id&#x27;: ObjectId(&#x27;671f71988a76e1c09ab851f2&#x27;), &#x27;username&#x27;: &#x27;&#x27;, &#x27;first_name&#x27;: &#x27;admin&#x27;, &#x27;last_name&#x27;: &#x27;admin&#x27;, &#x27;password&#x27;: &#x27;demo&#x27;, &#x27;mode_2fa&#x27;: &#x27;Off&#x27;, &#x27;groups&#x27;: [&#x27;Admin&#x27;], &#x27;rights&#x27;: &#x27;Admin&#x27;, &#x27;notes&#x27;: {&#x27;info&#x27;: &quot;this &#x27;notes&#x27; field exists only for this default admin user&quot;, &#x27;p&#x27;: &#x27;donttrustyou&#x27;}, &#x27;vec_2fa&#x27;: None, &#x27;baseurl&#x27;: &#x27;https://demo.filebrowser.org/login?redirect=/files/&#x27;, &#x27;is_valid&#x27;: False, &#x27;expected_error&#x27;: &#x27;Wrong credentials&#x27;, &#x27;createdAt&#x27;: datetime.datetime(2024, 10, 28, 11, 12, 24, 55000)}
-ERROR    login_testcases.test_invalid_login:test_invalid_login.py:85 Empty username or password found for user details: {&#x27;_id&#x27;: ObjectId(&#x27;671f71abd6fb19d91c706fb4&#x27;), &#x27;username&#x27;: &#x27;demo&#x27;, &#x27;first_name&#x27;: &#x27;admin&#x27;, &#x27;last_name&#x27;: &#x27;admin&#x27;, &#x27;password&#x27;: &#x27;&#x27;, &#x27;mode_2fa&#x27;: &#x27;Off&#x27;, &#x27;groups&#x27;: [&#x27;Admin&#x27;], &#x27;rights&#x27;: &#x27;Admin&#x27;, &#x27;notes&#x27;: {&#x27;info&#x27;: &quot;this &#x27;notes&#x27; field exists only for this default admin user&quot;, &#x27;p&#x27;: &#x27;donttrustyou&#x27;}, &#x27;vec_2fa&#x27;: None, &#x27;baseurl&#x27;: &#x27;https://demo.filebrowser.org/login?redirect=/files/&#x27;, &#x27;is_valid&#x27;: False, &#x27;expected_error&#x27;: &#x27;Wrong credentials&#x27;, &#x27;createdAt&#x27;: datetime.datetime(2024, 10, 28, 11, 12, 43, 404000)}
-ERROR    login_testcases.test_invalid_login:test_invalid_login.py:85 Empty username or password found for user details: {&#x27;_id&#x27;: ObjectId(&#x27;671f71b54b69104645e37af0&#x27;), &#x27;username&#x27;: &#x27;&#x27;, &#x27;first_name&#x27;: &#x27;admin&#x27;, &#x27;last_name&#x27;: &#x27;admin&#x27;, &#x27;password&#x27;: &#x27;&#x27;, &#x27;mode_2fa&#x27;: &#x27;Off&#x27;, &#x27;groups&#x27;: [&#x27;Admin&#x27;], &#x27;rights&#x27;: &#x27;Admin&#x27;, &#x27;notes&#x27;: {&#x27;info&#x27;: &quot;this &#x27;notes&#x27; field exists only for this default admin user&quot;, &#x27;p&#x27;: &#x27;donttrustyou&#x27;}, &#x27;vec_2fa&#x27;: None, &#x27;baseurl&#x27;: &#x27;https://demo.filebrowser.org/login?redirect=/files/&#x27;, &#x27;is_valid&#x27;: False, &#x27;expected_error&#x27;: &#x27;Wrong credentials&#x27;, &#x27;createdAt&#x27;: datetime.datetime(2024, 10, 28, 11, 12, 53, 301000)}<br/></div></td></tr></tbody>
+            <div class="image"><a href="screenshots/test_login_with_valid_users.png"><img src="screenshots/test_login_with_valid_users.png"/></a></div>
+            <div class="log">driver = &lt;selenium.webdriver.chrome.webdriver.WebDriver (session=&quot;bc00d38602aca02121f1c4cb0b4e1202&quot;)&gt;<br/>mongo_client = Collection(Database(MongoClient(host=[&#x27;127.0.0.1:27017&#x27;], document_class=dict, tz_aware=False, connect=True), &#x27;sampleupload&#x27;), &#x27;users&#x27;)<br/><br/>    def test_login_with_valid_users(driver, mongo_client):<br/>        valid_users = list(mongo_client.find({&quot;is_valid&quot;: True}))<br/>        assert valid_users, &quot;No valid users found in the database!&quot;<br/>    <br/>        for index, user_details in enumerate(valid_users):<br/>            required_keys = [&quot;username&quot;, &quot;password&quot;, &quot;baseurl&quot;]<br/>    <br/>            if not all(key in user_details for key in required_keys):<br/>                pytest.skip(f&quot;Skipping login due to missing keys in user: {user_details}&quot;)<br/>                continue<br/>    <br/>            username = user_details[&quot;username&quot;]<br/>            password = user_details[&quot;password&quot;]<br/>            base_url = user_details[&quot;baseurl&quot;]<br/>    <br/>            print(f&quot;Testing login for Username: &#x27;{username}&#x27; with Password: &#x27;{password}&#x27;&quot;)<br/>    <br/>            # Navigate to the base URL<br/>            try:<br/>                driver.get(base_url)<br/>                print(&quot;Navigated to:&quot;, base_url)<br/>            except Exception as e:<br/>                pytest.fail(f&quot;Error navigating to base URL: {e}&quot;)<br/>                continue<br/>    <br/>            # Perform login<br/>            login_page = LoginPage(driver)<br/>            login_page.setUsername(username)<br/>            login_page.setPassword(password)<br/>            login_page.clickLogin()<br/>    <br/>            time.sleep(2)  # Short delay to allow for any animations, if needed<br/>    <br/>            try:<br/>                # Verify successful login<br/>&gt;               WebDriverWait(driver, 10).until(<br/>                    EC.presence_of_element_located((By.XPATH, &quot;//a[contains(text(), &#x27;Logout&#x27;)]&quot;))<br/>                )<br/><br/>login_testcases\test_valid_login.py:81: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/><br/>self = &lt;selenium.webdriver.support.wait.WebDriverWait (session=&quot;bc00d38602aca02121f1c4cb0b4e1202&quot;)&gt;<br/>method = &lt;function presence_of_element_located.&lt;locals&gt;._predicate at 0x000001B1F75AAE80&gt;, message = &#x27;&#x27;<br/><br/>    def until(self, method, message: str = &quot;&quot;):<br/>        &quot;&quot;&quot;Calls the method provided with the driver as an argument until the \<br/>        return value does not evaluate to ``False``.<br/>    <br/>        :param method: callable(WebDriver)<br/>        :param message: optional message for :exc:`TimeoutException`<br/>        :returns: the result of the last call to `method`<br/>        :raises: :exc:`selenium.common.exceptions.TimeoutException` if timeout occurs<br/>        &quot;&quot;&quot;<br/>        screen = None<br/>        stacktrace = None<br/>    <br/>        end_time = time.monotonic() + self._timeout<br/>        while True:<br/>            try:<br/>                value = method(self._driver)<br/>                if value:<br/>                    return value<br/>            except self._ignored_exceptions as exc:<br/>                screen = getattr(exc, &quot;screen&quot;, None)<br/>                stacktrace = getattr(exc, &quot;stacktrace&quot;, None)<br/>            time.sleep(self._poll)<br/>            if time.monotonic() &gt; end_time:<br/>                break<br/>&gt;       raise TimeoutException(message, screen, stacktrace)<br/><span class="error">E       selenium.common.exceptions.TimeoutException: Message: </span><br/><span class="error">E       Stacktrace:</span><br/><span class="error">E       	GetHandleVerifier [0x00007FF604DE3AB5+28005]</span><br/><span class="error">E       	(No symbol) [0x00007FF604D483B0]</span><br/><span class="error">E       	(No symbol) [0x00007FF604BE580A]</span><br/><span class="error">E       	(No symbol) [0x00007FF604C35A3E]</span><br/><span class="error">E       	(No symbol) [0x00007FF604C35D2C]</span><br/><span class="error">E       	(No symbol) [0x00007FF604C7EA97]</span><br/><span class="error">E       	(No symbol) [0x00007FF604C5BA7F]</span><br/><span class="error">E       	(No symbol) [0x00007FF604C7B8B3]</span><br/><span class="error">E       	(No symbol) [0x00007FF604C5B7E3]</span><br/><span class="error">E       	(No symbol) [0x00007FF604C275C8]</span><br/><span class="error">E       	(No symbol) [0x00007FF604C28731]</span><br/><span class="error">E       	GetHandleVerifier [0x00007FF6050D643D+3118829]</span><br/><span class="error">E       	GetHandleVerifier [0x00007FF605126C90+3448640]</span><br/><span class="error">E       	GetHandleVerifier [0x00007FF60511CF0D+3408317]</span><br/><span class="error">E       	GetHandleVerifier [0x00007FF604EAA40B+841403]</span><br/><span class="error">E       	(No symbol) [0x00007FF604D5340F]</span><br/><span class="error">E       	(No symbol) [0x00007FF604D4F484]</span><br/><span class="error">E       	(No symbol) [0x00007FF604D4F61D]</span><br/><span class="error">E       	(No symbol) [0x00007FF604D3EB79]</span><br/><span class="error">E       	BaseThreadInitThunk [0x00007FFAAC55259D+29]</span><br/><span class="error">E       	RtlUserThreadStart [0x00007FFAAD86AF38+40]</span><br/><br/>..\AppData\Roaming\Python\Python311\site-packages\selenium\webdriver\support\wait.py:95: TimeoutException<br/><br/>During handling of the above exception, another exception occurred:<br/><br/>driver = &lt;selenium.webdriver.chrome.webdriver.WebDriver (session=&quot;bc00d38602aca02121f1c4cb0b4e1202&quot;)&gt;<br/>mongo_client = Collection(Database(MongoClient(host=[&#x27;127.0.0.1:27017&#x27;], document_class=dict, tz_aware=False, connect=True), &#x27;sampleupload&#x27;), &#x27;users&#x27;)<br/><br/>    def test_login_with_valid_users(driver, mongo_client):<br/>        valid_users = list(mongo_client.find({&quot;is_valid&quot;: True}))<br/>        assert valid_users, &quot;No valid users found in the database!&quot;<br/>    <br/>        for index, user_details in enumerate(valid_users):<br/>            required_keys = [&quot;username&quot;, &quot;password&quot;, &quot;baseurl&quot;]<br/>    <br/>            if not all(key in user_details for key in required_keys):<br/>                pytest.skip(f&quot;Skipping login due to missing keys in user: {user_details}&quot;)<br/>                continue<br/>    <br/>            username = user_details[&quot;username&quot;]<br/>            password = user_details[&quot;password&quot;]<br/>            base_url = user_details[&quot;baseurl&quot;]<br/>    <br/>            print(f&quot;Testing login for Username: &#x27;{username}&#x27; with Password: &#x27;{password}&#x27;&quot;)<br/>    <br/>            # Navigate to the base URL<br/>            try:<br/>                driver.get(base_url)<br/>                print(&quot;Navigated to:&quot;, base_url)<br/>            except Exception as e:<br/>                pytest.fail(f&quot;Error navigating to base URL: {e}&quot;)<br/>                continue<br/>    <br/>            # Perform login<br/>            login_page = LoginPage(driver)<br/>            login_page.setUsername(username)<br/>            login_page.setPassword(password)<br/>            login_page.clickLogin()<br/>    <br/>            time.sleep(2)  # Short delay to allow for any animations, if needed<br/>    <br/>            try:<br/>                # Verify successful login<br/>                WebDriverWait(driver, 10).until(<br/>                    EC.presence_of_element_located((By.XPATH, &quot;//a[contains(text(), &#x27;Logout&#x27;)]&quot;))<br/>                )<br/>                print(f&quot;Login successful for user: {username}&quot;)<br/>            except TimeoutException:<br/>                # Capture and log page source for debugging<br/>                print(f&quot;Login failed for user: {username}&quot;)<br/>                print(&quot;Page source at the time of failure:&quot;)<br/>                print(driver.page_source)<br/>&gt;               pytest.fail(f&quot;Timeout while waiting for successful login confirmation for user: {username}&quot;)<br/><span class="error">E               Failed: Timeout while waiting for successful login confirmation for user:</span><br/><br/>login_testcases\test_valid_login.py:90: Failed<br/> ------------------------------Captured stdout call------------------------------ <br/>Testing login for Username: &#x27;&#x27; with Password: &#x27;demo&#x27;
+Navigated to: https://demo.filebrowser.org/login?redirect=/files/
+Login failed for user: 
+Page source at the time of failure:
+&lt;html lang=&quot;en&quot; class=&quot;dark&quot; dir=&quot;ltr&quot;&gt;&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, user-scalable=no&quot;&gt;
+
+    
+
+    &lt;title&gt;Login - File Browser&lt;/title&gt;
+
+    &lt;meta name=&quot;robots&quot; content=&quot;noindex,nofollow&quot;&gt;
+
+    &lt;link rel=&quot;icon&quot; type=&quot;image/png&quot; sizes=&quot;32x32&quot; href=&quot;/static/img/icons/favicon-32x32.png&quot;&gt;
+    &lt;link rel=&quot;icon&quot; type=&quot;image/png&quot; sizes=&quot;16x16&quot; href=&quot;/static/img/icons/favicon-16x16.png&quot;&gt;
+
+    &lt;!-- Add to home screen for Android and modern mobile browsers --&gt;
+    &lt;link rel=&quot;manifest&quot; id=&quot;manifestPlaceholder&quot; crossorigin=&quot;use-credentials&quot; href=&quot;blob:https://demo.filebrowser.org/47d80c8f-f442-40a7-bafd-b489bd960b49&quot;&gt;
+    &lt;meta name=&quot;theme-color&quot; content=&quot;#2979ff&quot;&gt;
+
+    &lt;!-- Add to home screen for Safari on iOS/iPadOS --&gt;
+    &lt;meta name=&quot;apple-mobile-web-app-capable&quot; content=&quot;yes&quot;&gt;
+    &lt;meta name=&quot;apple-mobile-web-app-status-bar-style&quot; content=&quot;black&quot;&gt;
+    &lt;meta name=&quot;apple-mobile-web-app-title&quot; content=&quot;assets&quot;&gt;
+    &lt;link rel=&quot;apple-touch-icon&quot; href=&quot;/static/img/icons/apple-touch-icon.png&quot;&gt;
+
+    &lt;!-- Add to home screen for Windows --&gt;
+    &lt;meta name=&quot;msapplication-TileImage&quot; content=&quot;/static/img/icons/mstile-144x144.png&quot;&gt;
+    &lt;meta name=&quot;msapplication-TileColor&quot; content=&quot;#2979ff&quot;&gt;
+
+    &lt;!-- Inject Some Variables and generate the manifest json --&gt;
+    &lt;script&gt;
+      // We can assign JSON directly
+      window.FileBrowser = {&quot;AuthMethod&quot;:&quot;json&quot;,&quot;BaseURL&quot;:&quot;&quot;,&quot;CSS&quot;:false,&quot;Color&quot;:&quot;&quot;,&quot;DisableExternal&quot;:false,&quot;DisableUsedPercentage&quot;:false,&quot;EnableExec&quot;:true,&quot;EnableThumbs&quot;:true,&quot;LoginPage&quot;:true,&quot;Name&quot;:&quot;&quot;,&quot;NoAuth&quot;:false,&quot;ReCaptcha&quot;:false,&quot;ResizePreview&quot;:true,&quot;Signup&quot;:false,&quot;StaticURL&quot;:&quot;/static&quot;,&quot;Theme&quot;:&quot;&quot;,&quot;TusSettings&quot;:{&quot;chunkSize&quot;:10485760,&quot;retryCount&quot;:5},&quot;Version&quot;:&quot;2.31.2&quot;};
+      // Global function to prepend static url
+      window.__prependStaticUrl = (url) =&gt; {
+        return `${window.FileBrowser.StaticURL}/${url.replace(/^\/+/, &quot;&quot;)}`;
+      };
+      var dynamicManifest = {
+        name: window.FileBrowser.Name || &quot;File Browser&quot;,
+        short_name: window.FileBrowser.Name || &quot;File Browser&quot;,
+        icons: [
+          {
+            src: window.__prependStaticUrl(&quot;/img/icons/android-chrome-192x192.png&quot;),
+            sizes: &quot;192x192&quot;,
+            type: &quot;image/png&quot;,
+          },
+          {
+            src: window.__prependStaticUrl(&quot;/img/icons/android-chrome-512x512.png&quot;),
+            sizes: &quot;512x512&quot;,
+            type: &quot;image/png&quot;,
+          },
+        ],
+        start_url: window.location.origin + window.FileBrowser.BaseURL,
+        display: &quot;standalone&quot;,
+        background_color: &quot;#ffffff&quot;,
+        theme_color: window.FileBrowser.Color || &quot;#455a64&quot;,
+      };
+
+      const stringManifest = JSON.stringify(dynamicManifest);
+      const blob = new Blob([stringManifest], { type: &quot;application/json&quot; });
+      const manifestURL = URL.createObjectURL(blob);
+      document
+        .querySelector(&quot;#manifestPlaceholder&quot;)
+        .setAttribute(&quot;href&quot;, manifestURL);
+    &lt;/script&gt;
+
+    &lt;style&gt;
+      #loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        z-index: 9999;
+        transition: 0.1s ease opacity;
+        -webkit-transition: 0.1s ease opacity;
+      }
+
+      #loading.done {
+        opacity: 0;
+      }
+
+      #loading .spinner {
+        width: 70px;
+        text-align: center;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      #loading .spinner &gt; div {
+        width: 18px;
+        height: 18px;
+        background-color: #333;
+        border-radius: 100%;
+        display: inline-block;
+        animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+      }
+
+      #loading .spinner .bounce1 {
+        animation-delay: -0.32s;
+      }
+
+      #loading .spinner .bounce2 {
+        animation-delay: -0.16s;
+      }
+
+      @keyframes sk-bouncedelay {
+        0%,
+        80%,
+        100% {
+          transform: scale(0);
+        }
+        40% {
+          transform: scale(1);
+        }
+      }
+    &lt;/style&gt;
+    &lt;script type=&quot;module&quot; crossorigin=&quot;&quot; src=&quot;/static/assets/index-B6-dpoh6.js&quot;&gt;&lt;/script&gt;
+    &lt;link rel=&quot;modulepreload&quot; crossorigin=&quot;&quot; href=&quot;/static/assets/dayjs-DqU3et2E.js&quot;&gt;
+    &lt;link rel=&quot;modulepreload&quot; crossorigin=&quot;&quot; href=&quot;/static/assets/i18n-sWEFv6SY.js&quot;&gt;
+    &lt;link rel=&quot;stylesheet&quot; crossorigin=&quot;&quot; href=&quot;/static/assets/index-D4Zz5OAo.css&quot;&gt;
+    &lt;script type=&quot;module&quot;&gt;import.meta.url;import(&quot;_&quot;).catch(()=&gt;1);(async function*(){})().next();if(location.protocol!=&quot;file:&quot;){window.__vite_is_modern_browser=true}&lt;/script&gt;
+    &lt;script type=&quot;module&quot;&gt;!function(){if(window.__vite_is_modern_browser)return;console.warn(&quot;vite: loading legacy chunks, syntax error above and the same error below should be ignored&quot;);var e=document.getElementById(&quot;vite-legacy-polyfill&quot;),n=document.createElement(&quot;script&quot;);n.src=e.src,n.onload=function(){System.import(document.getElementById(&#x27;vite-legacy-entry&#x27;).getAttribute(&#x27;data-src&#x27;))},document.body.appendChild(n)}();&lt;/script&gt;
+  &lt;style type=&quot;text/css&quot;&gt;.vue-number-input[data-v-188efc8c]{display:block;font-size:0;max-width:100%;overflow:hidden;position:relative}.vue-number-input__button[data-v-188efc8c]{background-color:#fff;border:0;border-radius:.25rem;bottom:1px;position:absolute;top:1px;width:2.5rem;z-index:1}.vue-number-input__button[data-v-188efc8c]:focus{outline:none}.vue-number-input__button[data-v-188efc8c]:hover:after,.vue-number-input__button[data-v-188efc8c]:hover:before{background-color:#0074d9}.vue-number-input__button[data-v-188efc8c]:disabled{opacity:.65}.vue-number-input__button[data-v-188efc8c]:disabled:after,.vue-number-input__button[data-v-188efc8c]:disabled:before{background-color:#ddd}.vue-number-input__button[data-v-188efc8c]:after,.vue-number-input__button[data-v-188efc8c]:before{background-color:#111;content:&quot;&quot;;left:50%;position:absolute;top:50%;transform:translate(-50%,-50%);transition:background-color .15s}.vue-number-input__button[data-v-188efc8c]:before{height:1px;width:50%}.vue-number-input__button[data-v-188efc8c]:after{height:50%;width:1px}.vue-number-input__button--minus[data-v-188efc8c]{border-bottom-right-radius:0;border-right:1px solid #ddd;border-top-right-radius:0;left:1px}.vue-number-input__button--minus[data-v-188efc8c]:after{visibility:hidden}.vue-number-input__button--plus[data-v-188efc8c]{border-bottom-left-radius:0;border-left:1px solid #ddd;border-top-left-radius:0;right:1px}.vue-number-input__input[data-v-188efc8c]{-moz-appearance:textfield;background-color:#fff;border:1px solid #ddd;border-radius:.25rem;display:block;font-size:1rem;line-height:1.5;max-width:100%;min-height:1.5rem;min-width:3rem;padding:.4375rem .875rem;transition:border-color .15s;width:100%}.vue-number-input__input[data-v-188efc8c]::-webkit-inner-spin-button,.vue-number-input__input[data-v-188efc8c]::-webkit-outer-spin-button{-webkit-appearance:none}.vue-number-input__input[data-v-188efc8c]:focus{border-color:#0074d9;outline:none}.vue-number-input__input[data-v-188efc8c]:disabled,.vue-number-input__input[readonly][data-v-188efc8c]{background-color:#f8f8f8}.vue-number-input--inline[data-v-188efc8c]{display:inline-block}.vue-number-input--inline&gt;input[data-v-188efc8c]{display:inline-block;width:12.5rem}.vue-number-input--center&gt;input[data-v-188efc8c]{text-align:center}.vue-number-input--controls&gt;input[data-v-188efc8c]{padding-left:3.375rem;padding-right:3.375rem}.vue-number-input--small&gt;input[data-v-188efc8c]{border-radius:.1875rem;font-size:.875rem;padding:.25rem .5rem}.vue-number-input--small.vue-number-input--inline&gt;input[data-v-188efc8c]{width:10rem}.vue-number-input--small.vue-number-input--controls&gt;button[data-v-188efc8c]{width:2rem}.vue-number-input--small.vue-number-input--controls&gt;input[data-v-188efc8c]{padding-left:2.5rem;padding-right:2.5rem}.vue-number-input--large&gt;input[data-v-188efc8c]{border-radius:.3125rem;font-size:1.25rem;padding:.5rem 1rem}.vue-number-input--large.vue-number-input--inline&gt;input[data-v-188efc8c]{width:15rem}.vue-number-input--large.vue-number-input--controls&gt;button[data-v-188efc8c]{width:3rem}.vue-number-input--large.vue-number-input--controls&gt;input[data-v-188efc8c]{padding-left:4rem;padding-right:4rem}&lt;/style&gt;&lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id=&quot;app&quot; data-v-app=&quot;&quot;&gt;&lt;div&gt;&lt;div id=&quot;login&quot; class=&quot;&quot;&gt;&lt;form&gt;&lt;img src=&quot;/static/img/logo.svg&quot; alt=&quot;File Browser&quot;&gt;&lt;h1&gt;File Browser&lt;/h1&gt;&lt;div class=&quot;wrong&quot;&gt;Wrong credentials&lt;/div&gt;&lt;input autofocus=&quot;&quot; class=&quot;input input--block&quot; type=&quot;text&quot; autocapitalize=&quot;off&quot; placeholder=&quot;Username&quot;&gt;&lt;input class=&quot;input input--block&quot; type=&quot;password&quot; placeholder=&quot;Password&quot;&gt;&lt;!----&gt;&lt;!----&gt;&lt;input class=&quot;button button--block&quot; type=&quot;submit&quot; value=&quot;Login&quot;&gt;&lt;!----&gt;&lt;/form&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+
+    
+
+
+    
+    &lt;script nomodule=&quot;&quot;&gt;!function(){var e=document,t=e.createElement(&quot;script&quot;);if(!(&quot;noModule&quot;in t)&amp;&amp;&quot;onbeforeload&quot;in t){var n=!1;e.addEventListener(&quot;beforeload&quot;,(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute(&quot;nomodule&quot;)||!n)return;e.preventDefault()}),!0),t.type=&quot;module&quot;,t.src=&quot;.&quot;,e.head.appendChild(t),t.remove()}}();&lt;/script&gt;
+    &lt;script nomodule=&quot;&quot; crossorigin=&quot;&quot; id=&quot;vite-legacy-polyfill&quot; src=&quot;/static/assets/polyfills-legacy-ZPss0xUo.js&quot;&gt;&lt;/script&gt;
+    &lt;script nomodule=&quot;&quot; crossorigin=&quot;&quot; id=&quot;vite-legacy-entry&quot; data-src=&quot;/static/assets/index-legacy-CWpIMIWK.js&quot;&gt;System.import(document.getElementById(&#x27;vite-legacy-entry&#x27;).getAttribute(&#x27;data-src&#x27;))&lt;/script&gt;
+  
+
+&lt;div&gt;&lt;div&gt;&lt;div class=&quot;Vue-Toastification__container top-left&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;div class=&quot;Vue-Toastification__container top-center&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;div class=&quot;Vue-Toastification__container top-right&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;div class=&quot;Vue-Toastification__container bottom-left&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;div class=&quot;Vue-Toastification__container bottom-center&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;div class=&quot;Vue-Toastification__container bottom-right&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;
+<br/> ----------------------------Captured stdout teardown---------------------------- <br/>MongoDB client connection closed.
+Browser closed.
+<br/></div></td></tr></tbody>
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
-          <td class="col-name">login_testcases/test_valid_login.py::test_login_with_valid_users</td>
-          <td class="col-duration">16.21</td>
+          <td class="col-name">login_testcases/test_invalid_login.py::TestValidLogin::test_login_with_invalid_users</td>
+          <td class="col-duration">7.14</td>
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="4">
-            <div class="log"> ------------------------------Captured stdout call------------------------------ <br/>Testing login for Username: &#x27;&#x27; with Password: &#x27;demo&#x27;
-Navigated to: https://demo.filebrowser.org/login?redirect=/files/
-Testing login for Username: &#x27;demo&#x27; with Password: &#x27;demo&#x27;
-Navigated to: https://demo.filebrowser.org/login?redirect=/files/
-<br/> ----------------------------Captured stdout teardown---------------------------- <br/>MongoDB client connection closed.
-Browser closed.
-<br/></div></td></tr></tbody></table></body></html>
+            <div class="empty log">No log output captured.</div></td></tr></tbody></table></body></html>

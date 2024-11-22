@@ -80,10 +80,7 @@ class TestValidLogin:
 
             logger.info(f"Testing login for Username: '{username}' with Password: '{password}', expected error: '{expected_error}'")
 
-            # Handle empty username or password case
-            if not username or not password:
-                logger.error(f"Empty username or password found for user details: {user_details}")
-                expected_error = "Wrong credentials"  # Adjust expected error as needed
+            
 
             # Navigate to the base URL
             try:
